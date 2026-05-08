@@ -4,20 +4,20 @@
 
 const SKILLS = [
   {
-    category: "Frontend",
-    items: ["HTML5", "CSS3", "JavaScript", "React", "Tailwind CSS"]
+    category: "Data Analysis",
+    items: ["Python", "SQL", "Excel", "Power BI", "Data Visualization", "Statistics"]
   },
   {
-    category: "Backend",
-    items: ["Node.js", "Python", "REST API", "SQL"]
+    category: "E-Commerce & Branding",
+    items: ["品牌策略", "市場分析", "電商營運", "消費者洞察", "內容策略", "成效追蹤"]
   },
   {
-    category: "Tools",
-    items: ["Git", "GitHub", "VS Code", "Figma", "Docker"]
+    category: "AI Solutions",
+    items: ["Prompt Engineering", "ChatGPT", "Claude", "AI 工作流程", "自動化應用"]
   },
   {
-    category: "Currently Learning",
-    items: ["TypeScript", "Next.js", "PostgreSQL"]
+    category: "Wine & Spirits",
+    items: ["葡萄酒品鑑", "烈酒知識", "酒單規劃", "產區知識", "餐酒搭配"]
   }
 ];
 
