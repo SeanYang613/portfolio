@@ -9,8 +9,6 @@
 let state = 'menu';
 let activeTarget = null;
 
-// References to the 4 "menu-linked" orbit letter elements
-const menuLetterEls = [];
 
 // ============================================================
 //  CREATE ORBIT
@@ -67,8 +65,6 @@ function createOrbit() {
       pivot.appendChild(wrap);
       stage.appendChild(pivot);
 
-      // First 4 letters become the menu-linked ones (one per ring-1 letter)
-      if (globalIdx < 4) menuLetterEls.push(fl);
       globalIdx++;
     }
   });
@@ -79,27 +75,31 @@ function rand(min, max) {
 }
 
 // ============================================================
-//  MENU CLICKS
+//  LETTER TRAY — hover lifts letter, click opens it
 // ============================================================
-function initMenu() {
-  document.querySelectorAll('.cm-item').forEach((btn, i) => {
-    btn.addEventListener('click', () => {
+function initTray() {
+  document.querySelectorAll('.tray-letter').forEach(letter => {
+    function openThis() {
       if (state !== 'menu') return;
       state = 'flying';
 
-      const target = btn.dataset.target;
-      const fl = menuLetterEls[i % menuLetterEls.length];
+      const target = letter.dataset.target;
+      const env    = letter.querySelector('.tray-env');
 
-      // Dim orbiting letters and hide menu
       document.getElementById('orbitStage').classList.add('dimmed');
-      document.getElementById('centerMenu').classList.add('hidden');
+      document.getElementById('siteHeader').classList.add('hidden');
+      document.getElementById('letterTray').classList.add('hidden');
 
-      // 3-phase: fly to centre → flap opens → expand to full screen
-      flyAndOpen(fl, () => {
+      flyAndOpen(env, () => {
         openLetter(target);
         state = 'reading';
         activeTarget = target;
       });
+    }
+
+    letter.addEventListener('click', openThis);
+    letter.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openThis(); }
     });
   });
 }
@@ -230,7 +230,8 @@ function closeLetter() {
 
   document.body.classList.remove('reading');
   document.getElementById('orbitStage').classList.remove('dimmed');
-  document.getElementById('centerMenu').classList.remove('hidden');
+  document.getElementById('siteHeader').classList.remove('hidden');
+  document.getElementById('letterTray').classList.remove('hidden');
 
   state = 'menu';
   activeTarget = null;
@@ -334,5 +335,5 @@ document.getElementById('contactForm').addEventListener('submit', e => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   createOrbit();
-  initMenu();
+  initTray();
 });

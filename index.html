@@ -14,18 +14,43 @@
   <!-- Orbiting letters — populated by JS -->
   <div class="orbit-stage" id="orbitStage"></div>
 
-  <!-- Centre menu -->
-  <div class="center-menu" id="centerMenu">
-    <p class="cm-greeting">Hello, I'm</p>
-    <h1 class="cm-name">Sean Yang</h1>
-    <p class="cm-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
-    <div class="cm-divider"></div>
-    <nav class="cm-nav">
-      <button class="cm-item" data-target="about"    aria-label="Open About letter">About</button>
-      <button class="cm-item" data-target="skills"   aria-label="Open Skills letter">Skills</button>
-      <button class="cm-item" data-target="projects" aria-label="Open Projects letter">Projects</button>
-      <button class="cm-item" data-target="contact"  aria-label="Open Contact letter">Contact</button>
-    </nav>
+  <!-- Site header -->
+  <div class="site-header" id="siteHeader">
+    <p class="sh-greeting">Hello, I'm</p>
+    <h1 class="sh-name">Sean Yang</h1>
+    <p class="sh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
+  </div>
+
+  <!-- Letter tray — hover to pull out, click to open -->
+  <div class="letter-tray" id="letterTray" role="navigation" aria-label="Site sections">
+    <div class="tray-letter" data-target="about"    style="--rot:-5deg"   role="button" tabindex="0" aria-label="Open About letter">
+      <div class="tray-env">
+        <div class="tl-flap"></div>
+        <div class="tl-stamp"></div>
+        <span class="tl-label">About</span>
+      </div>
+    </div>
+    <div class="tray-letter" data-target="skills"   style="--rot:-1.8deg" role="button" tabindex="0" aria-label="Open Skills letter">
+      <div class="tray-env">
+        <div class="tl-flap"></div>
+        <div class="tl-stamp"></div>
+        <span class="tl-label">Skills</span>
+      </div>
+    </div>
+    <div class="tray-letter" data-target="projects" style="--rot:1.8deg"  role="button" tabindex="0" aria-label="Open Projects letter">
+      <div class="tray-env">
+        <div class="tl-flap"></div>
+        <div class="tl-stamp"></div>
+        <span class="tl-label">Projects</span>
+      </div>
+    </div>
+    <div class="tray-letter" data-target="contact"  style="--rot:5deg"    role="button" tabindex="0" aria-label="Open Contact letter">
+      <div class="tray-env">
+        <div class="tl-flap"></div>
+        <div class="tl-stamp"></div>
+        <span class="tl-label">Contact</span>
+      </div>
+    </div>
   </div>
 
   <!-- ===== LETTER PAGES ===== -->
