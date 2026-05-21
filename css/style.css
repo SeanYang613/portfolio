@@ -28,7 +28,28 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--scene-bg);
+  background-color: var(--scene-bg);
+  /* Dark walnut desk — irregular horizontal grain lines */
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent  0px, transparent  14px,
+      rgba(95,44,9,0.062) 14px, rgba(95,44,9,0.062)  15px,
+      transparent  15px, transparent  37px,
+      rgba(65,25,5,0.047) 37px, rgba(65,25,5,0.047)  38px,
+      transparent  38px, transparent  59px,
+      rgba(108,54,14,0.072) 59px, rgba(108,54,14,0.072) 60px,
+      transparent  60px, transparent  90px,
+      rgba(55,20,4,0.040) 90px, rgba(55,20,4,0.040)  91px,
+      transparent  91px, transparent 124px,
+      rgba(82,39,8,0.058) 124px, rgba(82,39,8,0.058) 125px
+    ),
+    /* Slight diagonal drift to break perfect horizontal symmetry */
+    repeating-linear-gradient(
+      1.2deg,
+      transparent 0px, transparent 200px,
+      rgba(75,32,6,0.018) 200px, rgba(75,32,6,0.018) 201px
+    );
   color: var(--text);
   line-height: 1.7;
   overflow: hidden;
@@ -54,13 +75,40 @@ button { font-family: inherit; }
   overflow: hidden;
 }
 
-/* Warm amber glow at centre */
+/* Layered desk-lamp atmosphere */
 .scene::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 55% at 50% 50%,
-    rgba(123,79,46,0.22) 0%, transparent 70%);
+  background:
+    /* Inner candle glow — concentrated warm amber at centre */
+    radial-gradient(ellipse 36% 30% at 50% 50%,
+      rgba(190,128,55,0.16) 0%, transparent 58%),
+    /* Mid warm halo — spreads out from lamp */
+    radial-gradient(ellipse 75% 62% at 50% 50%,
+      rgba(115,62,18,0.24) 0%, transparent 72%),
+    /* Desk-lamp cone from top-right — subtle directional light */
+    radial-gradient(ellipse 55% 45% at 78% 8%,
+      rgba(200,145,60,0.07) 0%, transparent 65%),
+    /* Edge vignette — darkens the four corners like a real room */
+    radial-gradient(ellipse 140% 120% at 50% 50%,
+      transparent 32%, rgba(0,0,0,0.62) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grain polish sheen — barely visible highlight across the desk surface */
+.scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      165deg,
+      rgba(200,155,80,0.04) 0%,
+      transparent 40%,
+      rgba(0,0,0,0.06) 100%
+    );
   pointer-events: none;
   z-index: 0;
 }
