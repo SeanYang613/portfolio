@@ -25,18 +25,11 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans);
-  background: #C8B89A;
-  background-image:
-    repeating-linear-gradient(45deg,
-      transparent 0 26px,
-      rgba(90,70,40,0.08) 26px 27px);
+  background: var(--paper-2);
   color: var(--ink);
   line-height: 1.7;
   overflow: hidden;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 body.reading { overflow: hidden; }
@@ -51,16 +44,13 @@ button { font-family: inherit; }
    ============================================================ */
 .desk {
   position: relative;
-  width: min(980px, 96vw);
-  height: min(640px, 92vh);
+  width: 100vw;
+  height: 100vh;
   background:
     repeating-linear-gradient(45deg,
       transparent 0 26px,
       rgba(90,70,40,0.07) 26px 27px),
     var(--paper-2);
-  border: 1.6px solid var(--ink);
-  border-radius: 4px;
-  box-shadow: 5px 6px 0 0 var(--ink);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -111,10 +101,10 @@ button { font-family: inherit; }
    ============================================================ */
 .env-fan {
   position: absolute;
-  bottom: 90px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  width: 860px;
+  width: min(940px, 96vw);
   height: 260px;
   z-index: 10;
 }
