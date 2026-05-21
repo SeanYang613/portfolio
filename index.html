@@ -3,155 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sean Yang | Portfolio</title>
+  <title>Sean Yang</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-logo">Sean Yang</div>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <!-- ===================== SCENE ===================== -->
+  <div class="scene">
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <p class="hero-greeting">Hi, I'm</p>
-      <h1 class="hero-name">Sean Yang</h1>
-      <p class="hero-tagline">Data Analyst · E-Commerce Consultant · AI Solutions · Wine Expert</p>
-      <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">View My Work</a>
-        <a href="#contact" class="btn btn-outline">Get In Touch</a>
-      </div>
-    </div>
-    <div class="hero-scroll">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
-  </section>
+    <!-- ENVELOPE STAGE -->
+    <div class="stage" id="stage">
+      <p class="stage-hint" id="stageHint">Click the seal to open</p>
 
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="container">
-      <h2 class="section-title">About Me</h2>
-      <div class="about-grid">
-        <div class="about-photo">
-          <div class="photo-placeholder">
-            <span>Photo</span>
+      <div class="envelope" id="envelope">
+
+        <!-- Flap (3D opens on seal click) -->
+        <div class="flap-wrap">
+          <div class="flap" id="flap">
+            <div class="flap-face flap-front"></div>
+            <div class="flap-face flap-back"></div>
           </div>
         </div>
-        <div class="about-text">
+
+        <!-- Letter tabs (peek above envelope when open) -->
+        <div class="letter-tabs" id="letterTabs">
+          <button class="ltab" data-target="about"    style="--i:0"><span>About</span></button>
+          <button class="ltab" data-target="skills"   style="--i:1"><span>Skills</span></button>
+          <button class="ltab" data-target="projects" style="--i:2"><span>Projects</span></button>
+          <button class="ltab" data-target="contact"  style="--i:3"><span>Contact</span></button>
+        </div>
+
+        <!-- Envelope front face -->
+        <div class="env-body">
+          <div class="env-return">
+            <p>Sean Yang</p>
+            <p>seanyang613@gmail.com</p>
+          </div>
+          <div class="env-stamp">
+            <span class="stamp-text">SY</span>
+            <span class="stamp-year">'26</span>
+          </div>
+          <div class="env-postmark">
+            <div class="pm-ring"><span>TAIPEI</span></div>
+          </div>
+          <div class="env-address">
+            <p class="addr-label">To</p>
+            <p class="addr-name">You</p>
+          </div>
+          <button class="wax-seal" id="waxSeal">
+            <span class="seal-mono">S·Y</span>
+            <span class="seal-cta">Open</span>
+          </button>
+        </div>
+
+      </div><!-- /envelope -->
+
+      <p class="open-hint" id="openHint">Choose a letter</p>
+    </div><!-- /stage -->
+
+
+    <!-- ===================== LETTER PAGES ===================== -->
+
+    <!-- ABOUT -->
+    <div class="letter-page" id="letter-about">
+      <button class="letter-close" data-back>✕</button>
+      <div class="letter-inner">
+        <div class="letterhead">
+          <div class="lh-mono">S·Y</div>
+          <div class="lh-info">
+            <p class="lh-name">Sean Yang</p>
+            <p class="lh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
+          </div>
+          <div class="lh-rule"></div>
+        </div>
+        <div class="letter-body">
+          <h2 class="letter-title">About Me</h2>
           <p>
-            嗨！我是 Sean，24 歲，橫跨數據、電商與酒類產業的多領域顧問。
-            我結合資料分析與商業洞察，協助品牌制定策略、優化決策。
+            嗨！我是 Sean，24 歲，橫跨數據分析、電商品牌、AI 應用與酒類產業的多領域顧問。
+            我結合資料洞察與商業策略，協助品牌做出更好的決策。
           </p>
           <p>
-            同時深耕 AI 解決方案應用，幫助企業將人工智慧落地到真實業務場景。
-            閒暇時是一名認真的酒類愛好者與專家。
+            熱衷於將 AI 工具落地到真實業務情境，同時是一名認真的酒類愛好者與專家。
+            相信跨領域的視角是解決複雜問題最有力的武器。
           </p>
-          <div class="about-stats">
+          <div class="stats-row">
             <div class="stat">
-              <span class="stat-number" data-target="10">0</span>
+              <span class="stat-num" data-target="10">0</span>
               <span class="stat-label">Projects</span>
             </div>
             <div class="stat">
-              <span class="stat-number" data-target="3">0</span>
+              <span class="stat-num" data-target="3">0</span>
               <span class="stat-label">Years Exp.</span>
             </div>
             <div class="stat">
-              <span class="stat-number" data-target="5">0</span>
-              <span class="stat-label">Technologies</span>
+              <span class="stat-num" data-target="4">0</span>
+              <span class="stat-label">Domains</span>
             </div>
           </div>
-          <a href="assets/resume.pdf" class="btn btn-primary" target="_blank">Download Resume</a>
+          <a href="assets/resume.pdf" class="btn" target="_blank">Download Resume</a>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- SKILLS -->
-  <section class="section section-alt" id="skills">
-    <div class="container">
-      <h2 class="section-title">Skills</h2>
-      <div class="skills-categories" id="skillsContainer">
-        <!-- Populated by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section class="section" id="projects">
-    <div class="container">
-      <h2 class="section-title">Projects</h2>
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <!-- More filters added by JS -->
-      </div>
-      <div class="projects-grid" id="projectsGrid">
-        <!-- Populated by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section section-alt" id="contact">
-    <div class="container">
-      <h2 class="section-title">Get In Touch</h2>
-      <div class="contact-layout">
-        <div class="contact-info">
-          <p>有任何問題或合作機會，歡迎隨時聯絡！</p>
-          <ul class="contact-links">
-            <li>
-              <span class="contact-icon">✉</span>
-              <a href="mailto:seanyang613@gmail.com">seanyang613@gmail.com</a>
-            </li>
-            <li>
-              <span class="contact-icon">⌥</span>
-              <a href="https://github.com/SeanYang613" target="_blank">GitHub</a>
-            </li>
-            <li>
-              <span class="contact-icon">in</span>
-              <a href="https://www.linkedin.com/in/han-siang-sean-yang-781897201" target="_blank">LinkedIn</a>
-            </li>
-          </ul>
+    <!-- SKILLS -->
+    <div class="letter-page" id="letter-skills">
+      <button class="letter-close" data-back>✕</button>
+      <div class="letter-inner">
+        <div class="letterhead">
+          <div class="lh-mono">S·Y</div>
+          <div class="lh-info">
+            <p class="lh-name">Sean Yang</p>
+            <p class="lh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
+          </div>
+          <div class="lh-rule"></div>
         </div>
-        <form class="contact-form" id="contactForm">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required />
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
-          </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Message</button>
-          <p class="form-status" id="formStatus"></p>
-        </form>
+        <div class="letter-body">
+          <h2 class="letter-title">Skills</h2>
+          <div class="skills-grid" id="skillsGrid"></div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <p>© 2026 Sean Yang. Built with HTML5 & JavaScript.</p>
+    <!-- PROJECTS -->
+    <div class="letter-page" id="letter-projects">
+      <button class="letter-close" data-back>✕</button>
+      <div class="letter-inner">
+        <div class="letterhead">
+          <div class="lh-mono">S·Y</div>
+          <div class="lh-info">
+            <p class="lh-name">Sean Yang</p>
+            <p class="lh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
+          </div>
+          <div class="lh-rule"></div>
+        </div>
+        <div class="letter-body">
+          <h2 class="letter-title">Projects</h2>
+          <div class="filter-bar" id="filterBar"></div>
+          <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+      </div>
     </div>
-  </footer>
+
+    <!-- CONTACT -->
+    <div class="letter-page" id="letter-contact">
+      <button class="letter-close" data-back>✕</button>
+      <div class="letter-inner">
+        <div class="letterhead">
+          <div class="lh-mono">S·Y</div>
+          <div class="lh-info">
+            <p class="lh-name">Sean Yang</p>
+            <p class="lh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
+          </div>
+          <div class="lh-rule"></div>
+        </div>
+        <div class="letter-body">
+          <h2 class="letter-title">Get In Touch</h2>
+          <div class="contact-layout">
+            <div class="contact-info">
+              <p>有任何問題或合作機會，歡迎隨時聯絡！</p>
+              <ul class="contact-links">
+                <li>
+                  <span class="c-icon">✉</span>
+                  <a href="mailto:seanyang613@gmail.com">seanyang613@gmail.com</a>
+                </li>
+                <li>
+                  <span class="c-icon">gh</span>
+                  <a href="https://github.com/SeanYang613" target="_blank" rel="noopener">GitHub</a>
+                </li>
+                <li>
+                  <span class="c-icon">in</span>
+                  <a href="https://www.linkedin.com/in/han-siang-sean-yang-781897201" target="_blank" rel="noopener">LinkedIn</a>
+                </li>
+              </ul>
+            </div>
+            <form class="contact-form" id="contactForm">
+              <div class="form-group">
+                <label for="fname">Name</label>
+                <input type="text" id="fname" name="name" required />
+              </div>
+              <div class="form-group">
+                <label for="femail">Email</label>
+                <input type="email" id="femail" name="email" required />
+              </div>
+              <div class="form-group">
+                <label for="fmsg">Message</label>
+                <textarea id="fmsg" name="message" rows="5" required></textarea>
+              </div>
+              <button type="submit" class="btn">Send Message</button>
+              <p class="form-status" id="formStatus"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scene -->
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
