@@ -111,6 +111,11 @@ function initMenu() {
 //  cover the entire viewport before revealing the letter page.
 // ============================================================
 function flyToCenter(fl, onDone) {
+  // Skip animation for users who prefer reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    onDone();
+    return;
+  }
   const rect = fl.getBoundingClientRect();
 
   const clone = document.createElement('div');
@@ -134,11 +139,11 @@ function flyToCenter(fl, onDone) {
   // before we switch on transitions (otherwise the animation is skipped)
   requestAnimationFrame(() => requestAnimationFrame(() => {
     clone.style.transition = [
-      'left 0.65s cubic-bezier(0.4,0,0.2,1)',
-      'top 0.65s cubic-bezier(0.4,0,0.2,1)',
-      'width 0.65s cubic-bezier(0.4,0,0.2,1)',
-      'height 0.65s cubic-bezier(0.4,0,0.2,1)',
-      'border-radius 0.3s ease 0.35s',
+      'left 0.42s ease-out',
+      'top 0.42s ease-out',
+      'width 0.42s ease-out',
+      'height 0.42s ease-out',
+      'border-radius 0.25s ease-out 0.18s',
     ].join(',');
     clone.style.left         = '0';
     clone.style.top          = '0';
@@ -150,7 +155,7 @@ function flyToCenter(fl, onDone) {
   setTimeout(() => {
     clone.remove();
     onDone();
-  }, 680);
+  }, 450);
 }
 
 // ============================================================

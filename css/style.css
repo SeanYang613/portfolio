@@ -14,9 +14,10 @@
   --text-muted:  #7A6354;
   --border:      #D4C4A8;
 
-  --font-serif:  'Playfair Display', Georgia, serif;
-  --font-sans:   'Inter', system-ui, sans-serif;
-  --font-script: 'Caveat', cursive;
+  --font-serif:   'Playfair Display', Georgia, serif;
+  --font-heading: 'Archivo', system-ui, sans-serif;
+  --font-sans:    'Space Grotesk', system-ui, sans-serif;
+  --font-script:  'Caveat', cursive;
 }
 
 /* ============================================================
@@ -185,7 +186,7 @@ button { font-family: inherit; }
 }
 
 .cm-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: clamp(2.4rem, 5.5vw, 4rem);
   color: var(--beige-light);
   line-height: 1.1;
@@ -218,7 +219,7 @@ button { font-family: inherit; }
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: clamp(1.15rem, 2.2vw, 1.55rem);
   color: rgba(253,248,240,0.62);
   padding: 9px 32px;
@@ -265,13 +266,19 @@ button { font-family: inherit; }
   opacity: 0;
   transform: scale(0.97);
   pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  /* ease-out for entering (skill: use ease-out for entrance) */
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
 }
 
 .letter-page.active {
   opacity: 1;
   transform: scale(1);
   pointer-events: all;
+}
+
+/* ease-in for exiting */
+.letter-page:not(.active) {
+  transition: opacity 0.3s ease-in, transform 0.3s ease-in;
 }
 
 .letter-inner {
@@ -338,7 +345,7 @@ button { font-family: inherit; }
 
 /* Section title */
 .letter-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   color: var(--brown-dark);
   margin-bottom: 24px;
@@ -565,4 +572,52 @@ button { font-family: inherit; }
   .contact-layout { grid-template-columns: 1fr; gap: 32px; }
   .projects-grid { grid-template-columns: 1fr; }
   .cm-nav { gap: 0; }
+}
+
+/* ============================================================
+   FOCUS STATES — keyboard navigation (skill: High severity)
+   ============================================================ */
+.cm-item:focus-visible {
+  outline: 2px solid var(--brown-light);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.letter-close:focus-visible,
+.btn:focus-visible,
+.filter-btn:focus-visible,
+.project-link:focus-visible {
+  outline: 2px solid var(--brown-mid);
+  outline-offset: 3px;
+}
+
+.form-group input:focus-visible,
+.form-group textarea:focus-visible {
+  outline: none; /* handled by box-shadow already */
+}
+
+/* Cursor pointer on all interactive cards */
+.project-card { cursor: default; }
+.ltab         { cursor: pointer; }
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION (skill: High severity)
+   Pause all decorative animations for users who prefer less motion.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-pivot,
+  .orbit-wrap {
+    animation-play-state: paused;
+  }
+
+  .letter-page,
+  .center-menu,
+  .cm-item::after,
+  .letter-close,
+  .btn,
+  .project-card,
+  .project-link,
+  .filter-btn {
+    transition: none;
+  }
 }
