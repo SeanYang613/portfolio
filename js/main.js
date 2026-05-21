@@ -8,6 +8,7 @@
 // 'reading' → letter page is open
 let state = 'menu';
 let activeTarget = null;
+let activeEnvIdx = 0;
 
 
 // ============================================================
@@ -75,31 +76,84 @@ function rand(min, max) {
 }
 
 // ============================================================
-//  LETTER TRAY — hover lifts letter, click opens it
+//  ENVELOPE STACK — scroll/swipe cycles, hover peeks, click opens
 // ============================================================
-function initTray() {
-  document.querySelectorAll('.tray-letter').forEach(letter => {
-    function openThis() {
+
+// Stack positions: [front, 2nd, 3rd, back]
+const STACK_POS = [
+  { x:   0, y:   0, rot:  0,   z: 40 },
+  { x:   8, y:   9, rot:  2.8, z: 30 },
+  { x:  -5, y:  16, rot: -2.2, z: 20 },
+  { x:  10, y:  22, rot:  4.0, z: 10 },
+];
+
+function updateStack() {
+  document.querySelectorAll('.stack-env').forEach((env, i) => {
+    const posIdx = ((i - activeEnvIdx) % 4 + 4) % 4;
+    const p = STACK_POS[posIdx];
+    env.style.transform = `translate(${p.x}px, ${p.y}px) rotate(${p.rot}deg)`;
+    env.style.zIndex    = p.z;
+    env.classList.toggle('is-front', posIdx === 0);
+  });
+  document.querySelectorAll('.stack-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === activeEnvIdx);
+  });
+}
+
+function initStack() {
+  updateStack();
+
+  // ── Scroll: cycle envelopes ───────────────────────────────
+  let scrollLocked = false;
+  document.addEventListener('wheel', e => {
+    if (state !== 'menu') return;
+    e.preventDefault();
+    if (scrollLocked) return;
+    scrollLocked = true;
+    activeEnvIdx = e.deltaY > 0
+      ? (activeEnvIdx + 1) % 4
+      : (activeEnvIdx - 1 + 4) % 4;
+    updateStack();
+    setTimeout(() => { scrollLocked = false; }, 420);
+  }, { passive: false });
+
+  // ── Touch swipe: cycle envelopes ─────────────────────────
+  let touchY = 0;
+  document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (state !== 'menu') return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) {
+      activeEnvIdx = dy > 0
+        ? (activeEnvIdx + 1) % 4
+        : (activeEnvIdx - 1 + 4) % 4;
+      updateStack();
+    }
+  }, { passive: true });
+
+  // ── Click: cycle if not front, open if front ─────────────
+  document.querySelectorAll('.stack-env').forEach(env => {
+    env.addEventListener('click', () => {
       if (state !== 'menu') return;
+      if (!env.classList.contains('is-front')) {
+        // Bring this one to front
+        activeEnvIdx = [...document.querySelectorAll('.stack-env')].indexOf(env);
+        updateStack();
+        return;
+      }
+      // Open the front envelope
       state = 'flying';
-
-      const target = letter.dataset.target;
-      const env    = letter.querySelector('.tray-env');
-
+      const target = env.dataset.target;
+      const seEnv  = env.querySelector('.se-env');
       document.getElementById('orbitStage').classList.add('dimmed');
       document.getElementById('siteHeader').classList.add('hidden');
-      document.getElementById('letterTray').classList.add('hidden');
-
-      flyAndOpen(env, () => {
+      document.getElementById('envStack').classList.add('hidden');
+      document.getElementById('stackDots').classList.add('hidden');
+      flyAndOpen(seEnv, () => {
         openLetter(target);
         state = 'reading';
         activeTarget = target;
       });
-    }
-
-    letter.addEventListener('click', openThis);
-    letter.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openThis(); }
     });
   });
 }
@@ -231,7 +285,8 @@ function closeLetter() {
   document.body.classList.remove('reading');
   document.getElementById('orbitStage').classList.remove('dimmed');
   document.getElementById('siteHeader').classList.remove('hidden');
-  document.getElementById('letterTray').classList.remove('hidden');
+  document.getElementById('envStack').classList.remove('hidden');
+  document.getElementById('stackDots').classList.remove('hidden');
 
   state = 'menu';
   activeTarget = null;
@@ -241,7 +296,19 @@ document.querySelectorAll('[data-back]').forEach(btn =>
   btn.addEventListener('click', closeLetter)
 );
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLetter();
+  if (e.key === 'Escape') { closeLetter(); return; }
+  if (state !== 'menu') return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    e.preventDefault();
+    activeEnvIdx = (activeEnvIdx + 1) % 4;
+    updateStack();
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    activeEnvIdx = (activeEnvIdx - 1 + 4) % 4;
+    updateStack();
+  } else if (e.key === 'Enter') {
+    document.querySelector('.stack-env.is-front')?.click();
+  }
 });
 
 // ============================================================
@@ -335,5 +402,5 @@ document.getElementById('contactForm').addEventListener('submit', e => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   createOrbit();
-  initTray();
+  initStack();
 });

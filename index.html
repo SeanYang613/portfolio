@@ -21,36 +21,72 @@
     <p class="sh-role">Data Analyst · E-Commerce · AI · Wine Expert</p>
   </div>
 
-  <!-- Letter tray — hover to pull out, click to open -->
-  <div class="letter-tray" id="letterTray" role="navigation" aria-label="Site sections">
-    <div class="tray-letter" data-target="about"    style="--rot:-5deg"   role="button" tabindex="0" aria-label="Open About letter">
-      <div class="tray-env">
-        <div class="tl-flap"></div>
-        <div class="tl-stamp"></div>
-        <span class="tl-label">About</span>
+  <!-- Envelope stack — scroll to browse, hover to peek, click to open -->
+  <div class="env-stack" id="envStack" role="navigation" aria-label="Site sections">
+    <div class="stack-env" data-target="about"    tabindex="0" role="button" aria-label="Open About">
+      <div class="se-env">
+        <div class="se-flap"></div>
+        <div class="se-stamp"></div>
+        <div class="se-addr">
+          <span class="se-to">To</span>
+          <span class="se-name">About</span>
+        </div>
+        <div class="se-lines">
+          <div class="se-line" style="width:55%"></div>
+          <div class="se-line" style="width:72%"></div>
+        </div>
       </div>
     </div>
-    <div class="tray-letter" data-target="skills"   style="--rot:-1.8deg" role="button" tabindex="0" aria-label="Open Skills letter">
-      <div class="tray-env">
-        <div class="tl-flap"></div>
-        <div class="tl-stamp"></div>
-        <span class="tl-label">Skills</span>
+    <div class="stack-env" data-target="skills"   tabindex="0" role="button" aria-label="Open Skills">
+      <div class="se-env">
+        <div class="se-flap"></div>
+        <div class="se-stamp"></div>
+        <div class="se-addr">
+          <span class="se-to">To</span>
+          <span class="se-name">Skills</span>
+        </div>
+        <div class="se-lines">
+          <div class="se-line" style="width:58%"></div>
+          <div class="se-line" style="width:76%"></div>
+        </div>
       </div>
     </div>
-    <div class="tray-letter" data-target="projects" style="--rot:1.8deg"  role="button" tabindex="0" aria-label="Open Projects letter">
-      <div class="tray-env">
-        <div class="tl-flap"></div>
-        <div class="tl-stamp"></div>
-        <span class="tl-label">Projects</span>
+    <div class="stack-env" data-target="projects" tabindex="0" role="button" aria-label="Open Projects">
+      <div class="se-env">
+        <div class="se-flap"></div>
+        <div class="se-stamp"></div>
+        <div class="se-addr">
+          <span class="se-to">To</span>
+          <span class="se-name">Projects</span>
+        </div>
+        <div class="se-lines">
+          <div class="se-line" style="width:52%"></div>
+          <div class="se-line" style="width:68%"></div>
+        </div>
       </div>
     </div>
-    <div class="tray-letter" data-target="contact"  style="--rot:5deg"    role="button" tabindex="0" aria-label="Open Contact letter">
-      <div class="tray-env">
-        <div class="tl-flap"></div>
-        <div class="tl-stamp"></div>
-        <span class="tl-label">Contact</span>
+    <div class="stack-env" data-target="contact"  tabindex="0" role="button" aria-label="Open Contact">
+      <div class="se-env">
+        <div class="se-flap"></div>
+        <div class="se-stamp"></div>
+        <div class="se-addr">
+          <span class="se-to">To</span>
+          <span class="se-name">Contact</span>
+        </div>
+        <div class="se-lines">
+          <div class="se-line" style="width:60%"></div>
+          <div class="se-line" style="width:78%"></div>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Stack position dots -->
+  <div class="stack-dots" id="stackDots">
+    <span class="stack-dot"></span>
+    <span class="stack-dot"></span>
+    <span class="stack-dot"></span>
+    <span class="stack-dot"></span>
   </div>
 
   <!-- ===== LETTER PAGES ===== -->
