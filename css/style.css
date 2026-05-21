@@ -111,7 +111,7 @@ button { font-family: inherit; }
    ============================================================ */
 .env-fan {
   position: absolute;
-  bottom: -22px;
+  bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
   width: 860px;
@@ -130,8 +130,8 @@ button { font-family: inherit; }
   transform-origin: 50% 110%;
   perspective: 900px;
   perspective-origin: 50% 0%;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease;
 
   background: var(--paper);
   background-image:
@@ -144,7 +144,11 @@ button { font-family: inherit; }
   border-radius: 2px;
   box-shadow: 2px 3px 0 0 rgba(42,35,24,0.35),
               0 8px 24px rgba(0,0,0,0.18);
-  transform-style: preserve-3d;
+}
+
+.env:hover {
+  box-shadow: 4px 6px 0 0 rgba(42,35,24,0.4),
+              0 24px 48px rgba(0,0,0,0.32);
 }
 
 /* Flap: ▽ triangle pointing down, top-hinged */
@@ -286,11 +290,11 @@ button { font-family: inherit; }
 .env.e5 { transform: translate(  340px, 24px) rotate( 14deg); z-index: 1; }
 
 /* Hover lifts */
-.env.e1:hover { transform: translate(-380px,-34px) rotate( -8deg) scale(1.03); z-index: 20; }
-.env.e2:hover { transform: translate(-200px,-54px) rotate( -3deg) scale(1.03); z-index: 20; }
-.env.e3:hover { transform: translate(  -20px,-62px) rotate(  0deg) scale(1.03); z-index: 20; }
-.env.e4:hover { transform: translate(  160px,-54px) rotate(  4deg) scale(1.03); z-index: 20; }
-.env.e5:hover { transform: translate(  340px,-34px) rotate(  9deg) scale(1.03); z-index: 20; }
+.env.e1:hover { transform: translate(-380px, -80px) rotate( -8deg) scale(1.06); z-index: 20; }
+.env.e2:hover { transform: translate(-200px,-100px) rotate( -3deg) scale(1.06); z-index: 20; }
+.env.e3:hover { transform: translate(  -20px,-110px) rotate(  0deg) scale(1.06); z-index: 20; }
+.env.e4:hover { transform: translate(  160px,-100px) rotate(  4deg) scale(1.06); z-index: 20; }
+.env.e5:hover { transform: translate(  340px, -80px) rotate(  9deg) scale(1.06); z-index: 20; }
 
 /* Suppress hover when overlay is open */
 .desk.overlay-open .env { pointer-events: none; }
