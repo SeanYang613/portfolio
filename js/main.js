@@ -94,8 +94,8 @@ function initMenu() {
       document.getElementById('orbitStage').classList.add('dimmed');
       document.getElementById('centerMenu').classList.add('hidden');
 
-      // Letter swoops to centre, expands to full screen, then content opens
-      flyToCenter(fl, () => {
+      // 3-phase: fly to centre → flap opens → expand to full screen
+      flyAndOpen(fl, () => {
         openLetter(target);
         state = 'reading';
         activeTarget = target;
@@ -105,72 +105,101 @@ function initMenu() {
 }
 
 // ============================================================
-//  FLY LETTER TO FULL SCREEN
-//  Captures the current screen position of the chosen orbit
-//  letter, clones it as a fixed div, then transitions it to
-//  cover the entire viewport before revealing the letter page.
+//  FLY AND OPEN  — 3-phase envelope animation
+//
+//  Phase 1 (350ms): orbit letter flies to centre, grows into
+//                   a full envelope shape
+//  Phase 2 (650ms): envelope flap rotates open (3D)
+//  Phase 3 (300ms): envelope expands to fill the viewport
 // ============================================================
-function flyToCenter(fl, onDone) {
-  // Skip animation for users who prefer reduced motion
+async function flyAndOpen(fl, onDone) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     onDone();
     return;
   }
 
-  const rect = fl.getBoundingClientRect();
+  const rect  = fl.getBoundingClientRect();
 
-  // Offset from letter centre → viewport centre
-  // Using transform:translate keeps the element in its original DOM position
-  // while appearing to fly toward the viewer — GPU-composited, no layout reflow
-  const lx = rect.left + rect.width  / 2;
-  const ly = rect.top  + rect.height / 2;
-  const tx = window.innerWidth  / 2 - lx;
-  const ty = window.innerHeight / 2 - ly;
+  // Target envelope dimensions (responsive)
+  const ENV_W = Math.min(520, window.innerWidth  * 0.86);
+  const ENV_H = Math.round(ENV_W * 0.66);
+  const ex    = (window.innerWidth  - ENV_W) / 2;   // left when centred
+  const ey    = (window.innerHeight - ENV_H) / 2;   // top  when centred
 
-  // Scale factor so the letter covers the entire viewport
-  const scale = Math.max(
-    window.innerWidth  / rect.width,
-    window.innerHeight / rect.height
-  ) * 1.25;
+  // Build the full envelope element
+  const env = document.createElement('div');
+  env.className = 'anim-env';
+  env.innerHTML = `
+    <div class="anim-flap-wrap">
+      <div class="anim-flap">
+        <div class="anim-flap-face anim-flap-front"></div>
+        <div class="anim-flap-face anim-flap-back"></div>
+      </div>
+    </div>
+    <div class="anim-body"></div>`;
 
-  const clone = document.createElement('div');
-  clone.style.cssText = `
-    position: fixed;
-    left: ${rect.left}px;
-    top:  ${rect.top}px;
-    width:  ${rect.width}px;
-    height: ${rect.height}px;
-    background:    #FDF8F0;
-    border:        1px solid #D4C4A8;
-    border-radius: 2px;
-    box-shadow:    0 8px 40px rgba(0,0,0,0.6);
-    z-index:       500;
-    pointer-events: none;
-    will-change:   transform;
-    transform-origin: center center;
-    transform: translate(0,0) scale(1);
-    transition: none;
-  `;
-  document.body.appendChild(clone);
+  // Start: same position and size as the orbit letter
+  Object.assign(env.style, {
+    left:   `${rect.left}px`,
+    top:    `${rect.top}px`,
+    width:  `${rect.width}px`,
+    height: `${rect.height}px`,
+  });
+  document.body.appendChild(env);
 
-  // Two-frame trick: paint initial state first, then kick off transition
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    clone.style.transition = [
-      'transform 0.52s cubic-bezier(0.22, 1, 0.36, 1)',  // ease-out exponential — feels like a fast swoop
-      'border-radius 0.2s ease-out 0.28s',
-      'box-shadow 0.3s ease-out',
-    ].join(',');
+  // ── Phase 1: swoop to centre, grow to full envelope ──────────
+  await raf2();
+  Object.assign(env.style, {
+    transition: [
+      'left   0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+      'top    0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+      'width  0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+      'height 0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+    ].join(','),
+    left:   `${ex}px`,
+    top:    `${ey}px`,
+    width:  `${ENV_W}px`,
+    height: `${ENV_H}px`,
+  });
 
-    // Fly to centre and fill screen in one transform — no layout shift
-    clone.style.transform     = `translate(${tx}px, ${ty}px) scale(${scale})`;
-    clone.style.borderRadius  = '0';
-    clone.style.boxShadow     = 'none';
-  }));
+  await wait(460);  // phase 1 duration + brief landing pause
 
-  setTimeout(() => {
-    clone.remove();
-    onDone();
-  }, 560);
+  // ── Phase 2: flip flap open ───────────────────────────────────
+  env.querySelector('.anim-flap').classList.add('open');
+
+  await wait(730);  // flap animation (650ms) + brief pause
+
+  // ── Phase 3: envelope expands to fill screen ──────────────────
+  Object.assign(env.style, {
+    transition: [
+      'left          0.32s ease-in',
+      'top           0.32s ease-in',
+      'width         0.32s ease-in',
+      'height        0.32s ease-in',
+      'border-radius 0.2s  ease-in',
+      'box-shadow    0.2s  ease-in',
+    ].join(','),
+    left:        '0',
+    top:         '0',
+    width:       '100vw',
+    height:      '100vh',
+    borderRadius:'0',
+    boxShadow:   'none',
+  });
+
+  await wait(340);
+  env.remove();
+  onDone();
+}
+
+// Utility: wait for two animation frames (ensures initial paint before transition)
+function raf2() {
+  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+// Utility: promise-based setTimeout
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // ============================================================
