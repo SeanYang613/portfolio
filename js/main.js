@@ -3,85 +3,19 @@
 // ============================================================
 //  STATE
 // ============================================================
-// 'menu' → user sees orbiting letters + centre menu
-// 'flying' → letter is animating to full screen
+// 'menu'    → envelope stack visible
+// 'flying'  → envelope is animating open
 // 'reading' → letter page is open
 let state = 'menu';
 let activeTarget = null;
 let activeEnvIdx = 0;
 
-
-// ============================================================
-//  CREATE ORBIT
-//  Generates mini envelopes that orbit the viewport centre.
-//  Three rings of letters at different radii and speeds,
-//  all rotating clockwise.
-// ============================================================
-function createOrbit() {
-  const stage = document.getElementById('orbitStage');
-
-  const rings = [
-    // { radius range vmin, orbit-speed range s, self-spin range s, count }
-    { r: [20, 28], orb: [5,  9],  spin: [1.8, 3.5], n: 4  },
-    { r: [36, 46], orb: [9,  14], spin: [2.5, 4.5], n: 5  },
-    { r: [54, 66], orb: [13, 20], spin: [3.0, 5.5], n: 4  },
-  ];
-
-  let globalIdx = 0;
-
-  rings.forEach(ring => {
-    for (let i = 0; i < ring.n; i++) {
-      const r        = rand(ring.r[0], ring.r[1]);
-      const orbSpeed = rand(ring.orb[0], ring.orb[1]);
-      const spinSpd  = rand(ring.spin[0], ring.spin[1]);
-      const startDeg = (globalIdx / 13) * 360 + rand(0, 20);
-      const delay    = -rand(0, orbSpeed);        // random phase
-      const w        = Math.round(rand(60, 96));  // envelope width px
-      const opacity  = rand(0.5, 0.95);
-
-      // Orbit pivot: zero-size, sits at viewport centre, rotates
-      const pivot = document.createElement('div');
-      pivot.className = 'orbit-pivot';
-      pivot.style.cssText =
-        `--start:${startDeg}deg; --speed:${orbSpeed}s; --delay:${delay}s; --r:${r}vmin;`;
-
-      // Arm tip wrapper: positioned at radius, spins on own axis
-      const wrap = document.createElement('div');
-      wrap.className = 'orbit-wrap';
-      wrap.style.cssText = `--spin:${spinSpd}s;`;
-
-      // Mini envelope
-      const fl = document.createElement('div');
-      fl.className = 'fl';
-      fl.style.cssText = `--w:${w}px; opacity:${opacity};`;
-      fl.innerHTML = `
-        <div class="fl-flap"></div>
-        <div class="fl-stamp"></div>
-        <div class="fl-lines">
-          <div class="fl-line" style="width:58%"></div>
-          <div class="fl-line" style="width:80%"></div>
-        </div>`;
-
-      wrap.appendChild(fl);
-      pivot.appendChild(wrap);
-      stage.appendChild(pivot);
-
-      globalIdx++;
-    }
-  });
-}
-
-function rand(min, max) {
-  return min + Math.random() * (max - min);
-}
-
 // ============================================================
 //  ENVELOPE STACK — scroll/swipe cycles, hover peeks, click opens
 // ============================================================
 
-// Stack positions: [front, 2nd, 3rd, back]
 const STACK_POS = [
-  { x:   0, y:   0, rot:  0,   z: 40 },
+  { x:   0, y:   0, rot:  0,   z: 40 },  // front
   { x:   8, y:   9, rot:  2.8, z: 30 },
   { x:  -5, y:  16, rot: -2.2, z: 20 },
   { x:  10, y:  22, rot:  4.0, z: 10 },
@@ -136,20 +70,17 @@ function initStack() {
     env.addEventListener('click', () => {
       if (state !== 'menu') return;
       if (!env.classList.contains('is-front')) {
-        // Bring this one to front
         activeEnvIdx = [...document.querySelectorAll('.stack-env')].indexOf(env);
         updateStack();
         return;
       }
-      // Open the front envelope
       state = 'flying';
       const target = env.dataset.target;
       const seEnv  = env.querySelector('.se-env');
-      document.getElementById('orbitStage').classList.add('dimmed');
       document.getElementById('siteHeader').classList.add('hidden');
       document.getElementById('envStack').classList.add('hidden');
       document.getElementById('stackDots').classList.add('hidden');
-      flyAndOpen(seEnv, () => {
+      openEnvelope(seEnv, () => {
         openLetter(target);
         state = 'reading';
         activeTarget = target;
@@ -159,28 +90,27 @@ function initStack() {
 }
 
 // ============================================================
-//  FLY AND OPEN  — 3-phase envelope animation
+//  OPEN ENVELOPE  — 2-phase animation
 //
-//  Phase 1 (350ms): orbit letter flies to centre, grows into
-//                   a full envelope shape
-//  Phase 2 (650ms): envelope flap rotates open (3D)
-//  Phase 3 (300ms): envelope expands to fill the viewport
+//  Phase 1 (180ms): lift + scale from stack envelope to full size
+//  Phase 2 (650ms): flap folds open (3D)
+//  Phase 3 (320ms): expand to fill the viewport
 // ============================================================
-async function flyAndOpen(fl, onDone) {
+async function openEnvelope(seEnv, onDone) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     onDone();
     return;
   }
 
-  const rect  = fl.getBoundingClientRect();
+  const rect = seEnv.getBoundingClientRect();
 
-  // Target envelope dimensions (responsive)
+  // Target full envelope size (centered)
   const ENV_W = Math.min(520, window.innerWidth  * 0.86);
   const ENV_H = Math.round(ENV_W * 0.66);
-  const ex    = (window.innerWidth  - ENV_W) / 2;   // left when centred
-  const ey    = (window.innerHeight - ENV_H) / 2;   // top  when centred
+  const ex    = (window.innerWidth  - ENV_W) / 2;
+  const ey    = (window.innerHeight - ENV_H) / 2;
 
-  // Build the full envelope element
+  // Build the animation envelope
   const env = document.createElement('div');
   env.className = 'anim-env';
   env.innerHTML = `
@@ -192,7 +122,7 @@ async function flyAndOpen(fl, onDone) {
     </div>
     <div class="anim-body"></div>`;
 
-  // Start: same position and size as the orbit letter
+  // Start at the stack envelope's exact position and size
   Object.assign(env.style, {
     left:   `${rect.left}px`,
     top:    `${rect.top}px`,
@@ -201,14 +131,14 @@ async function flyAndOpen(fl, onDone) {
   });
   document.body.appendChild(env);
 
-  // ── Phase 1: swoop to centre, grow to full envelope ──────────
+  // ── Phase 1: lift to centre, grow to full envelope ────────
   await raf2();
   Object.assign(env.style, {
     transition: [
-      'left   0.38s cubic-bezier(0.22, 1, 0.36, 1)',
-      'top    0.38s cubic-bezier(0.22, 1, 0.36, 1)',
-      'width  0.38s cubic-bezier(0.22, 1, 0.36, 1)',
-      'height 0.38s cubic-bezier(0.22, 1, 0.36, 1)',
+      'left   0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+      'top    0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+      'width  0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+      'height 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
     ].join(','),
     left:   `${ex}px`,
     top:    `${ey}px`,
@@ -216,44 +146,41 @@ async function flyAndOpen(fl, onDone) {
     height: `${ENV_H}px`,
   });
 
-  await wait(460);  // phase 1 duration + brief landing pause
+  await wait(280);
 
-  // ── Phase 2: flip flap open ───────────────────────────────────
+  // ── Phase 2: flap folds back ──────────────────────────────
   env.querySelector('.anim-flap').classList.add('open');
 
-  await wait(730);  // flap animation (650ms) + brief pause
+  await wait(730);
 
-  // ── Phase 3: envelope expands to fill screen ──────────────────
+  // ── Phase 3: fill the screen ──────────────────────────────
   Object.assign(env.style, {
     transition: [
       'left          0.32s ease-in',
       'top           0.32s ease-in',
       'width         0.32s ease-in',
       'height        0.32s ease-in',
-      'border-radius 0.2s  ease-in',
-      'box-shadow    0.2s  ease-in',
+      'border-radius 0.22s ease-in',
+      'box-shadow    0.22s ease-in',
     ].join(','),
-    left:        '0',
-    top:         '0',
-    width:       '100vw',
-    height:      '100vh',
-    borderRadius:'0',
-    boxShadow:   'none',
+    left:         '0',
+    top:          '0',
+    width:        '100vw',
+    height:       '100vh',
+    borderRadius: '0',
+    boxShadow:    'none',
   });
 
-  await wait(340);
+  await wait(350);
   env.remove();
   onDone();
 }
 
-// Utility: wait for two animation frames (ensures initial paint before transition)
 function raf2() {
-  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 }
-
-// Utility: promise-based setTimeout
 function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(r => setTimeout(r, ms));
 }
 
 // ============================================================
@@ -262,15 +189,10 @@ function wait(ms) {
 function openLetter(target) {
   const page = document.getElementById(`letter-${target}`);
   if (!page) return;
-
-  // Show instantly (clone already fills screen; seamless handoff)
   page.style.transition = 'none';
   document.body.classList.add('reading');
   page.classList.add('active');
-
-  // Restore transition for the close animation
   requestAnimationFrame(() => { page.style.transition = ''; });
-
   if (target === 'skills')   renderSkills();
   if (target === 'projects') renderProjects();
   if (target === 'about')    setTimeout(animateCounters, 300);
@@ -278,16 +200,12 @@ function openLetter(target) {
 
 function closeLetter() {
   if (state !== 'reading') return;
-
   const page = document.getElementById(`letter-${activeTarget}`);
   if (page) page.classList.remove('active');
-
   document.body.classList.remove('reading');
-  document.getElementById('orbitStage').classList.remove('dimmed');
   document.getElementById('siteHeader').classList.remove('hidden');
   document.getElementById('envStack').classList.remove('hidden');
   document.getElementById('stackDots').classList.remove('hidden');
-
   state = 'menu';
   activeTarget = null;
 }
@@ -334,15 +252,12 @@ let projectsRendered = false;
 function renderProjects() {
   if (projectsRendered) return;
   projectsRendered = true;
-
   const grid = document.getElementById('projectsGrid');
   const bar  = document.getElementById('filterBar');
-
   const cats = ['All', ...new Set(PROJECTS.map(p => p.category))];
   bar.innerHTML = cats.map(c =>
     `<button class="filter-btn${c === 'All' ? ' active' : ''}" data-filter="${c}">${c}</button>`
   ).join('');
-
   grid.innerHTML = PROJECTS.map(p => `
     <article class="project-card" data-category="${p.category}">
       <div class="project-thumb">
@@ -358,7 +273,6 @@ function renderProjects() {
         </div>
       </div>
     </article>`).join('');
-
   bar.addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
@@ -401,6 +315,5 @@ document.getElementById('contactForm').addEventListener('submit', e => {
 //  INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  createOrbit();
   initStack();
 });

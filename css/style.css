@@ -114,99 +114,6 @@ button { font-family: inherit; }
 }
 
 /* ============================================================
-   ORBIT STAGE
-   ============================================================ */
-.orbit-stage {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  transition: opacity 0.5s ease;
-}
-
-.orbit-stage.dimmed { opacity: 0; }
-
-/* ---------- Orbit pivot ----------
-   Zero-size element at viewport centre; rotates like a clock hand.
-   The letter sits at left: var(--r), so it orbits at that radius. */
-.orbit-pivot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  animation: orbitCW var(--speed, 10s) linear infinite;
-  animation-delay: var(--delay, 0s);
-}
-
-@keyframes orbitCW {
-  from { transform: rotate(var(--start, 0deg)); }
-  to   { transform: rotate(calc(var(--start, 0deg) + 360deg)); }
-}
-
-/* ---------- Letter wrapper at arm tip ----------
-   Also spins on its own axis (the Harry Potter tumble). */
-.orbit-wrap {
-  position: absolute;
-  left: var(--r, 28vmin);
-  top: 0;
-  animation: selfSpin var(--spin, 3s) linear infinite;
-}
-
-@keyframes selfSpin {
-  from { transform: translateY(-50%) rotate(0deg); }
-  to   { transform: translateY(-50%) rotate(360deg); }
-}
-
-/* ---------- Mini envelope shape ---------- */
-.fl {
-  width: var(--w, 80px);
-  height: calc(var(--w, 80px) * 0.68);
-  background: var(--beige);
-  border: 1px solid var(--beige-dark);
-  border-radius: 2px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
-}
-
-/* Triangle flap */
-.fl-flap {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 44%;
-  background: var(--beige-mid);
-  clip-path: polygon(50% 0, 0 100%, 100% 100%);
-  border-bottom: 1px solid var(--beige-dark);
-}
-
-/* Tiny stamp */
-.fl-stamp {
-  position: absolute;
-  top: 8%; right: 7%;
-  width: 19%; height: 26%;
-  background: var(--beige-dark);
-  border: 1px solid var(--brown-light);
-  opacity: 0.7;
-}
-
-/* Address lines */
-.fl-lines {
-  position: absolute;
-  bottom: 12%; left: 12%; right: 12%;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.fl-line {
-  height: 1px;
-  background: var(--beige-dark);
-  border-radius: 1px;
-  opacity: 0.8;
-}
-
-/* ============================================================
    SITE HEADER
    ============================================================ */
 .site-header {
@@ -851,11 +758,6 @@ button { font-family: inherit; }
    Pause all decorative animations for users who prefer less motion.
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .orbit-pivot,
-  .orbit-wrap {
-    animation-play-state: paused;
-  }
-
   .letter-page,
   .site-header,
   .env-stack,
