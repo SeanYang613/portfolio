@@ -1,55 +1,91 @@
 // ============================================================
-//  EDIT THIS FILE to update your skills and projects
+//  Edit this file to update your content
 // ============================================================
-
-const SKILLS = [
-  {
-    category: "Data Analysis",
-    items: ["Python", "SQL", "Excel", "Power BI", "Data Visualization", "Statistics"]
-  },
-  {
-    category: "E-Commerce & Branding",
-    items: ["品牌策略", "市場分析", "電商營運", "消費者洞察", "內容策略", "成效追蹤"]
-  },
-  {
-    category: "AI Solutions",
-    items: ["Prompt Engineering", "ChatGPT", "Claude", "AI 工作流程", "自動化應用"]
-  },
-  {
-    category: "Wine & Spirits",
-    items: ["葡萄酒品鑑", "烈酒知識", "酒單規劃", "產區知識", "餐酒搭配"]
-  }
-];
 
 const PROJECTS = [
   {
     id: 1,
-    title: "Project Name",
-    description: "簡短描述這個 project 做了什麼、解決了什麼問題。",
-    tags: ["JavaScript", "HTML", "CSS"],       // used for filtering
+    title: "Portfolio Website",
+    description: "Personal portfolio built with pure HTML/CSS/JS featuring an envelope metaphor UI with CSS 3D animations.",
+    tags: ["HTML", "CSS", "JavaScript"],
     category: "Web",
-    image: "",                                  // path to image, e.g. "assets/images/proj1.jpg"
-    demoUrl: "#",
-    githubUrl: "#"
+    image: "",
+    demoUrl: "https://seanyang613.github.io/portfolio",
+    githubUrl: "https://github.com/SeanYang613/portfolio"
   },
   {
     id: 2,
-    title: "Another Project",
-    description: "另一個 project 的簡短說明，突顯你使用的技術或成果。",
-    tags: ["Python", "API"],
-    category: "Tool",
+    title: "E-Commerce Analytics Dashboard",
+    description: "Sales performance tracking dashboard built with Python and Power BI, integrating multiple data sources.",
+    tags: ["Python", "Power BI", "SQL"],
+    category: "Data",
     image: "",
-    demoUrl: "#",
-    githubUrl: "#"
+    demoUrl: "",
+    githubUrl: ""
   },
   {
     id: 3,
-    title: "Side Project",
-    description: "Side project 說明。可以放截圖或 demo 連結讓訪客直接體驗。",
-    tags: ["React", "Node.js"],
-    category: "Web",
+    title: "AI Workflow Automation",
+    description: "Automated content generation and data pipeline using Claude API and Python for an e-commerce brand.",
+    tags: ["Python", "AI", "API"],
+    category: "AI",
     image: "",
-    demoUrl: "#",
-    githubUrl: "#"
+    demoUrl: "",
+    githubUrl: ""
+  }
+];
+
+const WINE_NOTES = [
+  {
+    vintage: "2019",
+    name: "Château Pichon Baron — Pauillac, Bordeaux",
+    note: "Deep garnet with cedar and blackcurrant on the nose. The palate is structured with firm tannins, layers of dark fruit, graphite, and a long, mineral finish. A serious Pauillac that rewards patience.",
+    tags: ["Cabernet Sauvignon", "Left Bank", "Bordeaux", "Cellar Candidate"]
+  },
+  {
+    vintage: "2021",
+    name: "Domaine Leflaive Puligny-Montrachet — Burgundy",
+    note: "Pale gold with green highlights. Aromas of white flowers, hazelnut, and struck flint. On the palate: taut acidity, creamy texture, and extraordinary mineral tension. The definition of Burgundian Chardonnay.",
+    tags: ["Chardonnay", "White Burgundy", "Biodynamic"]
+  },
+  {
+    vintage: "2018",
+    name: "Vega Sicilia Único — Ribera del Duero",
+    note: "A legendary bottle. Complex nose of dried roses, leather, tobacco, and ripe Tempranillo fruit. Silky, evolving tannins with a finish that seems to last forever. One of Spain's greatest expressions.",
+    tags: ["Tempranillo", "Spain", "Ribera del Duero", "Icon Wine"]
+  }
+];
+
+const TIMELINE = [
+  {
+    date: "2024 — Present",
+    role: "AI Solutions Consultant",
+    org: "Freelance",
+    desc: "Designing and implementing AI workflows for e-commerce brands. Prompt engineering, automation pipelines, and LLM integration.",
+    highlight: true
+  },
+  {
+    date: "2023 — Present",
+    role: "Data Analyst",
+    org: "E-Commerce Brand",
+    desc: "Building analytics dashboards, consumer insight reports, and performance tracking systems using Python, SQL, and Power BI."
+  },
+  {
+    date: "2022 — 2023",
+    role: "E-Commerce Brand Consultant",
+    org: "Independent",
+    desc: "Brand strategy, content planning, and market analysis for DTC brands entering Taiwan and Southeast Asian markets."
+  },
+  {
+    date: "2021 — 2022",
+    role: "Wine Specialist",
+    org: "Fine Wine Retailer",
+    desc: "Wine curation, staff training, and client advisory. Achieved WSET Level 3 certification during this period."
+  },
+  {
+    date: "2019 — 2021",
+    role: "B.Sc. Studies",
+    org: "University",
+    desc: "Focused coursework in data analysis, statistics, and business strategy. First exposure to Python and SQL."
   }
 ];
