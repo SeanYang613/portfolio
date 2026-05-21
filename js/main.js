@@ -116,46 +116,61 @@ function flyToCenter(fl, onDone) {
     onDone();
     return;
   }
+
   const rect = fl.getBoundingClientRect();
+
+  // Offset from letter centre → viewport centre
+  // Using transform:translate keeps the element in its original DOM position
+  // while appearing to fly toward the viewer — GPU-composited, no layout reflow
+  const lx = rect.left + rect.width  / 2;
+  const ly = rect.top  + rect.height / 2;
+  const tx = window.innerWidth  / 2 - lx;
+  const ty = window.innerHeight / 2 - ly;
+
+  // Scale factor so the letter covers the entire viewport
+  const scale = Math.max(
+    window.innerWidth  / rect.width,
+    window.innerHeight / rect.height
+  ) * 1.25;
 
   const clone = document.createElement('div');
   clone.style.cssText = `
     position: fixed;
     left: ${rect.left}px;
-    top: ${rect.top}px;
-    width: ${rect.width}px;
+    top:  ${rect.top}px;
+    width:  ${rect.width}px;
     height: ${rect.height}px;
-    background: #FDF8F0;
-    border: 1px solid #D4C4A8;
+    background:    #FDF8F0;
+    border:        1px solid #D4C4A8;
     border-radius: 2px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    z-index: 500;
+    box-shadow:    0 8px 40px rgba(0,0,0,0.6);
+    z-index:       500;
     pointer-events: none;
+    will-change:   transform;
+    transform-origin: center center;
+    transform: translate(0,0) scale(1);
     transition: none;
   `;
   document.body.appendChild(clone);
 
-  // Two-frame wait ensures the browser has painted the initial state
-  // before we switch on transitions (otherwise the animation is skipped)
+  // Two-frame trick: paint initial state first, then kick off transition
   requestAnimationFrame(() => requestAnimationFrame(() => {
     clone.style.transition = [
-      'left 0.42s ease-out',
-      'top 0.42s ease-out',
-      'width 0.42s ease-out',
-      'height 0.42s ease-out',
-      'border-radius 0.25s ease-out 0.18s',
+      'transform 0.52s cubic-bezier(0.22, 1, 0.36, 1)',  // ease-out exponential — feels like a fast swoop
+      'border-radius 0.2s ease-out 0.28s',
+      'box-shadow 0.3s ease-out',
     ].join(',');
-    clone.style.left         = '0';
-    clone.style.top          = '0';
-    clone.style.width        = '100vw';
-    clone.style.height       = '100vh';
-    clone.style.borderRadius = '0';
+
+    // Fly to centre and fill screen in one transform — no layout shift
+    clone.style.transform     = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    clone.style.borderRadius  = '0';
+    clone.style.boxShadow     = 'none';
   }));
 
   setTimeout(() => {
     clone.remove();
     onDone();
-  }, 450);
+  }, 560);
 }
 
 // ============================================================
