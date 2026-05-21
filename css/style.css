@@ -644,9 +644,9 @@ button { font-family: inherit; }
   transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Open state: flap rotates backward 180° around the base */
+/* Open state: flap folds back (tip goes into screen) around the base */
 .anim-flap.open {
-  transform: rotateX(-180deg);
+  transform: rotateX(180deg);
 }
 
 .anim-flap-face {
@@ -668,7 +668,7 @@ button { font-family: inherit; }
 
 .anim-flap-back {
   background: var(--beige);
-  transform: rotateX(180deg);
+  transform: rotateX(-180deg);
 }
 
 /* ============================================================
