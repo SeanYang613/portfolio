@@ -26,11 +26,11 @@
    RESET
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: #3A1C0B; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--paper-2);
+  background: transparent;
   color: var(--ink);
   line-height: 1.7;
   overflow: hidden;
@@ -50,7 +50,7 @@ button { font-family: inherit; }
 #bg-canvas {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
 }
 
 /* ============================================================
@@ -61,7 +61,6 @@ button { font-family: inherit; }
   width: 100vw;
   height: 100vh;
   background: transparent;
-  z-index: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
