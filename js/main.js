@@ -69,6 +69,7 @@ function openLetter(target, envEl) {
     overlay.style.animation = '';
 
     state = 'reading';
+    document.getElementById('letterClose').focus();
 
     // Render dynamic content
     if (target === 'about')    setTimeout(animateCounters, 350);
@@ -85,10 +86,9 @@ function closeLetter() {
   if (state !== 'reading') return;
   state = 'opening';
 
-  overlay.classList.add('closing');
+  const prevEnv = envEls.find(e => e.classList.contains('active'));
 
-  overlay.addEventListener('animationend', function handler() {
-    overlay.removeEventListener('animationend', handler);
+  function reset() {
     overlay.setAttribute('hidden', '');
     overlay.classList.remove('closing');
     overlay.style.animation = '';
@@ -96,7 +96,14 @@ function closeLetter() {
     desk.classList.remove('overlay-open');
     state = 'menu';
     activeTarget = null;
-  }, { once: true });
+    prevEnv?.focus();
+  }
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) { reset(); return; }
+
+  overlay.classList.add('closing');
+  overlay.addEventListener('animationend', reset, { once: true });
 }
 
 document.getElementById('letterClose').addEventListener('click', closeLetter);

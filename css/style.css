@@ -15,6 +15,11 @@
   --font-sans:   'Space Grotesk', system-ui, sans-serif;
   --font-mono:   'JetBrains Mono', 'Courier New', monospace;
   --font-script: 'Caveat', cursive;
+
+  --noise-desk:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  --noise-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  --noise-kraft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  --noise-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
 /* ============================================================
@@ -40,17 +45,23 @@ img { max-width: 100%; display: block; }
 button { font-family: inherit; }
 
 /* ============================================================
+   BACKGROUND CANVAS (Three.js)
+   ============================================================ */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ============================================================
    DESK
    ============================================================ */
 .desk {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background:
-    repeating-linear-gradient(45deg,
-      transparent 0 26px,
-      rgba(90,70,40,0.07) 26px 27px),
-    var(--paper-2);
+  background: transparent;
+  z-index: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -73,28 +84,31 @@ button { font-family: inherit; }
 .hn-hi {
   font-family: var(--font-script);
   font-size: 1.25rem;
-  color: var(--ink-soft);
+  color: rgba(220, 200, 172, 0.85);
   margin-bottom: 4px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 .hn-big {
   font-family: var(--font-serif);
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   font-weight: 700;
-  color: var(--ink);
+  color: #F2E4CC;
   line-height: 1.05;
   margin-bottom: 10px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
 }
 
 .hn-roles {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
-  color: var(--ink-faint);
+  color: rgba(188, 165, 135, 0.9);
   text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
-.hn-roles .k { color: var(--wine); }
+.hn-roles .k { color: #D4886A; }
 
 /* ============================================================
    ENVELOPE FAN
@@ -125,6 +139,7 @@ button { font-family: inherit; }
 
   background: var(--paper);
   background-image:
+    var(--noise-paper),
     radial-gradient(ellipse 80% 60% at 30% 20%,
       rgba(255,252,240,0.7) 0%, transparent 55%),
     repeating-linear-gradient(-18deg,
@@ -149,6 +164,7 @@ button { font-family: inherit; }
   height: 58%;
   background: var(--kraft);
   background-image:
+    var(--noise-kraft),
     repeating-linear-gradient(-18deg,
       transparent 0px, transparent 4px,
       rgba(100,75,40,0.035) 4px, rgba(100,75,40,0.035) 5px);
@@ -297,6 +313,7 @@ button { font-family: inherit; }
   inset: 0;
   background: var(--paper);
   background-image:
+    var(--noise-light),
     repeating-linear-gradient(
       transparent, transparent 27px,
       rgba(100,75,40,0.06) 28px),
@@ -538,7 +555,7 @@ button { font-family: inherit; }
   border-radius: 3px;
   overflow: hidden;
   transition: box-shadow 0.2s, transform 0.2s;
-  cursor: default;
+  cursor: pointer;
 }
 
 .project-card:hover {
@@ -786,6 +803,12 @@ button { font-family: inherit; }
 /* ============================================================
    FOCUS STATES
    ============================================================ */
+.env:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
 .letter-close:focus-visible,
 .btn:focus-visible,
 .filter-btn:focus-visible,
@@ -795,10 +818,74 @@ button { font-family: inherit; }
 }
 
 /* ============================================================
+   WAX SEAL
+   ============================================================ */
+.e-seal {
+  position: absolute;
+  top: 57%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.e-seal-l,
+.e-seal-r {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center,
+      rgba(255,155,130,0.5) 0px, rgba(255,155,130,0.5) 4px,
+      transparent 5px, transparent 21px,
+      rgba(255,148,125,0.3) 22px, rgba(255,148,125,0.3) 24px,
+      transparent 25px),
+    radial-gradient(circle at 34% 32%, #C83545 0%, #7C1E2E 48%, #3E0E18 100%);
+  box-shadow:
+    inset 0 2px 5px rgba(255,190,170,0.4),
+    inset 0 -3px 6px rgba(0,0,0,0.55),
+    0 4px 16px rgba(0,0,0,0.5);
+}
+
+.e-seal-l { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+.e-seal-r { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+
+.env.active .e-seal {
+  animation: seal-appear 0.16s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.env.active .e-seal-l {
+  animation: crack-l 0.24s cubic-bezier(0.55, 0, 1, 0.45) 0.22s both;
+}
+
+.env.active .e-seal-r {
+  animation: crack-r 0.24s cubic-bezier(0.55, 0, 1, 0.45) 0.22s both;
+}
+
+@keyframes seal-appear {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes crack-l {
+  0%   { transform: none; opacity: 1; }
+  100% { transform: translateX(-54px) translateY(-8px) rotate(-24deg); opacity: 0; }
+}
+
+@keyframes crack-r {
+  0%   { transform: none; opacity: 1; }
+  100% { transform: translateX(54px) translateY(-8px) rotate(24deg); opacity: 0; }
+}
+
+/* ============================================================
    PREFERS-REDUCED-MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .env, .env::before, .e-letter,
+  .e-seal, .e-seal-l, .e-seal-r,
   .letter-overlay, .btn, .project-card,
   .project-link, .filter-btn, .letter-close {
     transition: none;
